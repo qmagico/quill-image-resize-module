@@ -1,7 +1,7 @@
 {
-  "name": "quill-image-resize-module",
-  "version": "3.0.0",
-  "description": "A module for Quill rich text editor to allow images to be resized.",
+  "name": "quill-image-resize-and-rotate-module",
+  "version": "3.0.1",
+  "description": "Forked from https://github.com/kensnyder/quill-image-resize-module.  Added rotate functionality.",
   "main": "image-resize.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kensnyder/quill-image-resize-module.git"
+    "url": "git+https://github.com/andrewcampey/quill-image-resize-module.git"
   },
   "keywords": [
     "quill",
