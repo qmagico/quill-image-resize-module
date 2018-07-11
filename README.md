@@ -24,16 +24,21 @@ Here's a way to not have to tinker with the webpack.config.ts file
 
 terminal
 
+```
 npm install quill --save
 npm install quill-image-resize-module --save
-angular-cli.json
+```
 
+angular-cli.json
+```
 "scripts": [
         ...,
         "../node_modules/quill/dist/quill.min.js"
  ]
-Componente.ts
+ ```
 
+Componente.ts
+```
 import * as QuillNamespace from 'quill';
 let Quill: any = QuillNamespace;
 import ImageResize from 'quill-image-resize-module';
@@ -54,7 +59,9 @@ this.editor_modules = {
       },
       imageResize: true
     };
+```
 
 Component.html
+```
 <quill-editor [modules]="editor_modules" [(ngModel)]="content"></quill-editor>
-
+```
