@@ -1,0 +1,30 @@
+.ql-editor .img-zerorotate {
+	transform: rotate(0deg);
+}
+
+.ql-editor .img-minus90rotate {
+	transform: rotate(-90deg);
+}
+
+.ql-editor .img-90rotate {
+	transform: rotate(90deg);
+}
+
+.ql-editor .img-180rotate {
+	transform: rotate(180deg);
+}
+
+.ql-editor .img-alignleft {
+	float: left;
+	margin: 0 1em 1em 0;
+}
+
+.ql-editor .img-aligncenter {
+	display: block;
+	margin: auto;
+}
+
+.ql-editor .img-alignright {
+	float: right;
+	margin: 0 0 1em 1em;
+}

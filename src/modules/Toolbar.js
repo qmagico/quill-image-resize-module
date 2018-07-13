@@ -3,6 +3,7 @@ import IconAlignCenter from 'quill/assets/icons/align-center.svg';
 import IconAlignRight from 'quill/assets/icons/align-right.svg';
 import IconUndo from 'quill/assets/icons/undo.svg'
 import IconRedo from 'quill/assets/icons/redo.svg'
+import Delta from 'quill-delta';
 
 import { BaseModule } from './BaseModule';
 
@@ -10,7 +11,7 @@ const Parchment = window.Quill.imports.parchment;
 const FloatStyle = new Parchment.Attributor.Style('float', 'float');
 const MarginStyle = new Parchment.Attributor.Style('margin', 'margin');
 const DisplayStyle = new Parchment.Attributor.Style('display', 'display');
-const TransformStyle = new Parchment.Attributor.Style('transform', 'transform');
+const ImageClass = new Parchment.Attributor.Class('class', 'img');
 
 export class Toolbar extends BaseModule {
 	rotation = 0;
@@ -40,9 +41,18 @@ export class Toolbar extends BaseModule {
 				name: 'alignleft',
                 icon: IconAlignLeft,
                 apply: () => {
+					// Adds a class of img-alignleft
+					ImageClass.add(this.img, name);
+					/*
                     DisplayStyle.add(this.img, 'inline');
                     FloatStyle.add(this.img, 'left');
-                    MarginStyle.add(this.img, '0 1em 1em 0');
+					MarginStyle.add(this.img, '0 1em 1em 0');
+					*/
+
+					// This fires off a change for the quill view
+					var width = this.img.width;
+					this.img.width = width - 1;
+					this.img.width = width + 1;
                 },
                 isApplied: () => FloatStyle.value(this.img) == 'left',
             },
@@ -50,9 +60,19 @@ export class Toolbar extends BaseModule {
 				name: 'aligncenter',
                 icon: IconAlignCenter,
                 apply: () => {
+					// Adds a class of img-aligncenter
+					ImageClass.add(this.img, name);
+					/*
                     DisplayStyle.add(this.img, 'block');
                     FloatStyle.remove(this.img);
-                    MarginStyle.add(this.img, 'auto');
+					MarginStyle.add(this.img, 'auto');
+					*/
+
+					// This fires off a change for the quill view
+					var width = this.img.width;
+					this.img.width = width - 1;
+					this.img.width = width + 1;
+
                 },
                 isApplied: () => MarginStyle.value(this.img) == 'auto',
             },
@@ -60,9 +80,18 @@ export class Toolbar extends BaseModule {
 				name: 'alignright',
                 icon: IconAlignRight,
                 apply: () => {
+					// Adds a class of img-alignright
+					ImageClass.add(this.img, name);
+					/*
                     DisplayStyle.add(this.img, 'inline');
                     FloatStyle.add(this.img, 'right');
-                    MarginStyle.add(this.img, '0 0 1em 1em');
+					MarginStyle.add(this.img, '0 0 1em 1em');
+					*/
+
+					// This fires off a change for the quill view
+					var width = this.img.width;
+					this.img.width = width - 1;
+					this.img.width = width + 1;
                 },
                 isApplied: () => FloatStyle.value(this.img) == 'right',
 			},
@@ -71,7 +100,14 @@ export class Toolbar extends BaseModule {
 				icon: IconUndo,
                 apply: () => {
 					this.rotationvalue = this._setRotation('left');
-					TransformStyle.add(this.img, this.rotationvalue);
+
+					// Adds a class of img-<<rotationvalue>>
+					ImageClass.add(this.img, this.rotationvalue);
+
+					// This fires off a change for the quill view
+					var width = this.img.width;
+					this.img.width = width - 1;
+					this.img.width = width + 1;
                 },
                 isApplied: () => { },
 			},
@@ -80,7 +116,14 @@ export class Toolbar extends BaseModule {
                 icon: IconRedo,
                 apply: () => {
 					this.rotationvalue = this._setRotation('right');
-					TransformStyle.add(this.img, this.rotationvalue);
+
+					// Adds a class of img-<<rotationvalue>>
+					ImageClass.add(this.img, this.rotationvalue);
+
+					// This fires off a change for the quill view
+					var width = this.img.width;
+					this.img.width = width - 1;
+					this.img.width = width + 1;
                 },
                 isApplied: () => { },
 			},
@@ -133,23 +176,43 @@ export class Toolbar extends BaseModule {
 	_setRotation(direction) {
 		if (this.rotation == 0 && direction == 'left') {
 			this.rotation = -90;
+			return 'minus90rotate';
 		} else if (this.rotation == -90 && direction == 'left') {
 			this.rotation = 180;
+			return '180rotate';
 		} else if (this.rotation == 180 && direction == 'left') {
 			this.rotation = 90;
+			return '90rotate';
 		} else if (this.rotation == 90 && direction == 'left') {
 			this.rotation = 0;
+			return 'zerorotate';
 		} else if (this.rotation == 0 && direction == 'right') {
 			this.rotation = 90;
+			return '90rotate';
 		} else if (this.rotation == 90 && direction == 'right') {
 			this.rotation = 180;
+			return '180rotate';
 		} else if (this.rotation == 180 && direction == 'right') {
 			this.rotation = -90;
+			return 'minus90rotate';
 		} else if (this.rotation == -90 && direction == 'right') {
 			this.rotation = 0;
+			return 'zerorotate';
+		} else {
+			return 'zerorotate';
 		}
-
-		return 'rotate(' + this.rotation + 'deg)';
 	}
 
+	setUserSelect(value) {
+		[
+		  'userSelect',
+		  'mozUserSelect',
+		  'webkitUserSelect',
+		  'msUserSelect'
+		].forEach(prop => {
+		  // set on contenteditable element and <html>
+		  this.quill.root.style[prop] = value;
+		  document.documentElement.style[prop] = value;
+		});
+	  }
 }
