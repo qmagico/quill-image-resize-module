@@ -8,10 +8,13 @@ import Delta from 'quill-delta';
 import { BaseModule } from './BaseModule';
 
 const Parchment = window.Quill.imports.parchment;
+/*
 const FloatStyle = new Parchment.Attributor.Style('float', 'float');
 const MarginStyle = new Parchment.Attributor.Style('margin', 'margin');
 const DisplayStyle = new Parchment.Attributor.Style('display', 'display');
-const ImageClass = new Parchment.Attributor.Class('class', 'img');
+*/
+const ResizeImageClass = new Parchment.Attributor.Class('class', 'res');
+const RotateImageClass = new Parchment.Attributor.Class('class', 'rot');
 
 export class Toolbar extends BaseModule {
 	rotation = 0;
@@ -42,7 +45,7 @@ export class Toolbar extends BaseModule {
                 icon: IconAlignLeft,
                 apply: () => {
 					// Adds a class of img-alignleft
-					ImageClass.add(this.img, name);
+					ResizeImageClass.add(this.img, 'alignleft');
 					/*
                     DisplayStyle.add(this.img, 'inline');
                     FloatStyle.add(this.img, 'left');
@@ -51,17 +54,17 @@ export class Toolbar extends BaseModule {
 
 					// This fires off a change for the quill view
 					var width = this.img.width;
-					this.img.width = width - 1;
 					this.img.width = width + 1;
+					this.img.width = width - 1;
                 },
-                isApplied: () => FloatStyle.value(this.img) == 'left',
+                isApplied: () => { }, // FloatStyle.value(this.img) == 'left',
             },
             {
 				name: 'aligncenter',
                 icon: IconAlignCenter,
                 apply: () => {
 					// Adds a class of img-aligncenter
-					ImageClass.add(this.img, name);
+					ResizeImageClass.add(this.img, 'aligncenter');
 					/*
                     DisplayStyle.add(this.img, 'block');
                     FloatStyle.remove(this.img);
@@ -74,14 +77,14 @@ export class Toolbar extends BaseModule {
 					this.img.width = width + 1;
 
                 },
-                isApplied: () => MarginStyle.value(this.img) == 'auto',
+                isApplied: () => { }, // MarginStyle.value(this.img) == 'auto',
             },
             {
 				name: 'alignright',
                 icon: IconAlignRight,
                 apply: () => {
 					// Adds a class of img-alignright
-					ImageClass.add(this.img, name);
+					ResizeImageClass.add(this.img, 'alignright');
 					/*
                     DisplayStyle.add(this.img, 'inline');
                     FloatStyle.add(this.img, 'right');
@@ -93,7 +96,7 @@ export class Toolbar extends BaseModule {
 					this.img.width = width - 1;
 					this.img.width = width + 1;
                 },
-                isApplied: () => FloatStyle.value(this.img) == 'right',
+                isApplied: () => { }, // FloatStyle.value(this.img) == 'right',
 			},
 			{
 				name: 'rotate-left',
@@ -102,7 +105,7 @@ export class Toolbar extends BaseModule {
 					this.rotationvalue = this._setRotation('left');
 
 					// Adds a class of img-<<rotationvalue>>
-					ImageClass.add(this.img, this.rotationvalue);
+					RotateImageClass.add(this.img, this.rotationvalue);
 
 					// This fires off a change for the quill view
 					var width = this.img.width;
@@ -118,7 +121,7 @@ export class Toolbar extends BaseModule {
 					this.rotationvalue = this._setRotation('right');
 
 					// Adds a class of img-<<rotationvalue>>
-					ImageClass.add(this.img, this.rotationvalue);
+					RotateImageClass.add(this.img, this.rotationvalue);
 
 					// This fires off a change for the quill view
 					var width = this.img.width;
