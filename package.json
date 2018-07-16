@@ -1,6 +1,6 @@
 {
   "name": "quill-image-resize-and-rotate-module",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Forked from https://github.com/kensnyder/quill-image-resize-module.  Added rotate functionality.",
   "main": "image-resize.min.js",
   "scripts": {
