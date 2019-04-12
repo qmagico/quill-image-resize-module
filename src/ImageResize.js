@@ -5,6 +5,7 @@ import { Toolbar } from './modules/Toolbar';
 import { Resize } from './modules/Resize';
 
 const knownModules = { DisplaySize, Toolbar, Resize };
+const Parchment = window.Quill.imports.parchment
 
 /**
  * Custom module for quilljs to allow user to resize <img> elements
@@ -113,14 +114,18 @@ export default class ImageResize {
             this.hideOverlay();
         }
 
-        this.quill.setSelection(null);
-
         // prevent spurious text selection
-        this.setUserSelect('none');
+        this.setUserSelect(this.img);
+
+        const image_blot = Parchment.Registry.find(this.img);
+        const indexSelectedImage = this.quill.getIndex(image_blot);
+        this.quill.setSelection(indexSelectedImage, 0, 'user');
 
         // listen for the image being deleted or moved
         document.addEventListener('keyup', this.checkImage, true);
         this.quill.root.addEventListener('input', this.checkImage, true);
+        document.addEventListener('keydown', this.selectImage, true);
+        this.quill.on('text-change', this.repositionElements, true);
 
         // Create and add the overlay
         this.overlay = document.createElement('div');
@@ -130,6 +135,14 @@ export default class ImageResize {
 
         this.repositionElements();
     };
+
+    selectImage = (evt) => {
+        if (this.img) {
+            const image_blot = Parchment.Registry.find(this.img);
+            const indexSelectedImage = this.quill.getIndex(image_blot);
+            this.quill.setSelection(indexSelectedImage, 1, 'user');
+        }
+    }
 
     hideOverlay = () => {
         if (!this.overlay) {
@@ -143,6 +156,8 @@ export default class ImageResize {
         // stop listening for image deletion or movement
         document.removeEventListener('keyup', this.checkImage);
         this.quill.root.removeEventListener('input', this.checkImage);
+        document.removeEventListener('keydown', this.selectImage);
+        this.quill.off('text-change', this.repositionElements);
 
         // reset user-select
         this.setUserSelect('');
@@ -187,8 +202,23 @@ export default class ImageResize {
 
     checkImage = (evt) => {
         if (this.img) {
-            if (evt.keyCode == 46 || evt.keyCode == 8) {
-                window.Quill.find(this.img).deleteAt(0);
+            var model = this;
+            setTimeout(function(){
+                model.repositionElements();
+            });
+            
+            if ([16, 17, 18].indexOf(evt.keyCode) >= 0) {  // alt, shift and ctrl
+                // Unselect image but keep cursor close
+                const image_blot = Parchment.Registry.find(this.img);
+                const indexSelectedImage = this.quill.getIndex(image_blot);
+                this.quill.setSelection(indexSelectedImage, 0, 'user');
+                return;
+            }
+            if (evt.keyCode == 46 || evt.keyCode == 8) {  // 46 = delete, 8 = backspace
+                var img_blot = window.Quill.find(this.img);
+                if (img_blot) {
+                    img_blot.deleteAt(0);
+                }
             }
             this.hide();
         }

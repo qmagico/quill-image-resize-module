@@ -1,7 +1,7 @@
 {
   "name": "quill-image-resize-and-rotate-module",
   "version": "3.0.2",
-  "description": "Forked from https://github.com/kensnyder/quill-image-resize-module.  Added rotate functionality.",
+  "description": "Forked from https://github.com/kensnyder/quill-image-resize-module. Fork adapted for quill 2.0.",
   "main": "image-resize.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrewcampey/quill-image-resize-module.git"
+    "url": "git+https://github.com/qmagico/quill-image-resize-module.git"
   },
   "keywords": [
     "quill",
@@ -21,18 +21,14 @@
     "resize",
     "sizer"
   ],
-  "author": "@kensnyder",
+  "author": "@qmagico",
   "contributors": [
-    {
-      "name": "Wikia",
-      "url": "https://github.com/Wikia"
-    }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kensnyder/quill-image-resize-module/issues"
+    "url": "https://github.com/qmagico/quill-image-resize-module/issues"
   },
-  "homepage": "https://github.com/kensnyder/quill-image-resize-module#readme",
+  "homepage": "https://github.com/qmagico/quill-image-resize-module#readme",
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-eslint": "^7.2.1",
@@ -45,11 +41,12 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "webpack": "^2.3.3"
+    "webpack": "^2.7.0",
+    "webpack-cli": "^3.3.0"
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "quill": "^1.2.2",
+    "quill": "^2.0.0",
     "quill-delta": "^3.6.2",
     "raw-loader": "^0.5.1"
   }

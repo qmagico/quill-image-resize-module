@@ -7,26 +7,24 @@ import Delta from 'quill-delta';
 
 import { BaseModule } from './BaseModule';
 
-const Parchment = window.Quill.imports.parchment;
-/*
-const FloatStyle = new Parchment.Attributor.Style('float', 'float');
-const MarginStyle = new Parchment.Attributor.Style('margin', 'margin');
-const DisplayStyle = new Parchment.Attributor.Style('display', 'display');
-*/
-const ResizeImageClass = new Parchment.Attributor.Class('class', 'res');
-const RotateImageClass = new Parchment.Attributor.Class('class', 'rot');
+const classAttributor = window.Quill.imports.parchment.ClassAttributor;
+
+const RotateImageClass = new classAttributor('class', 'rot');
 
 export class Toolbar extends BaseModule {
 	rotation = 0;
 
     onCreate = () => {
+    	if (this.img.classList[0] == 'rot-90rotate') this.rotation = 90;
+		else if (this.img.classList[0] == 'rot-180rotate') this.rotation = 180;
+		else if (this.img.classList[0] == 'rot-minus90rotate') this.rotation = -90;
 		// Setup Toolbar
         this.toolbar = document.createElement('div');
         Object.assign(this.toolbar.style, this.options.toolbarStyles);
         this.overlay.appendChild(this.toolbar);
 
         // Setup Buttons
-        this._defineAlignments();
+        this._definerotations();
         this._addToolbarButtons();
     };
 
@@ -36,81 +34,18 @@ export class Toolbar extends BaseModule {
 	// Nothing to update on drag because we are are positioned relative to the overlay
     onUpdate = () => {};
 
-    _defineAlignments = () => {
+    _definerotations = () => {
 		this.rotationvalue = '';
 
-        this.alignments = [
-            {
-				name: 'alignleft',
-                icon: IconAlignLeft,
-                apply: () => {
-					// Adds a class of img-alignleft
-					ResizeImageClass.add(this.img, 'alignleft');
-					/*
-                    DisplayStyle.add(this.img, 'inline');
-                    FloatStyle.add(this.img, 'left');
-					MarginStyle.add(this.img, '0 1em 1em 0');
-					*/
-
-					// This fires off a change for the quill view
-					var width = this.img.width;
-					this.img.width = width + 1;
-					this.img.width = width - 1;
-                },
-                isApplied: () => { }, // FloatStyle.value(this.img) == 'left',
-            },
-            {
-				name: 'aligncenter',
-                icon: IconAlignCenter,
-                apply: () => {
-					// Adds a class of img-aligncenter
-					ResizeImageClass.add(this.img, 'aligncenter');
-					/*
-                    DisplayStyle.add(this.img, 'block');
-                    FloatStyle.remove(this.img);
-					MarginStyle.add(this.img, 'auto');
-					*/
-
-					// This fires off a change for the quill view
-					var width = this.img.width;
-					this.img.width = width - 1;
-					this.img.width = width + 1;
-
-                },
-                isApplied: () => { }, // MarginStyle.value(this.img) == 'auto',
-            },
-            {
-				name: 'alignright',
-                icon: IconAlignRight,
-                apply: () => {
-					// Adds a class of img-alignright
-					ResizeImageClass.add(this.img, 'alignright');
-					/*
-                    DisplayStyle.add(this.img, 'inline');
-                    FloatStyle.add(this.img, 'right');
-					MarginStyle.add(this.img, '0 0 1em 1em');
-					*/
-
-					// This fires off a change for the quill view
-					var width = this.img.width;
-					this.img.width = width - 1;
-					this.img.width = width + 1;
-                },
-                isApplied: () => { }, // FloatStyle.value(this.img) == 'right',
-			},
+        this.rotations = [
 			{
 				name: 'rotate-left',
 				icon: IconUndo,
                 apply: () => {
 					this.rotationvalue = this._setRotation('left');
 
-					// Adds a class of img-<<rotationvalue>>
+					// Adds a class of rot-<<rotationvalue>>
 					RotateImageClass.add(this.img, this.rotationvalue);
-
-					// This fires off a change for the quill view
-					var width = this.img.width;
-					this.img.width = width - 1;
-					this.img.width = width + 1;
                 },
                 isApplied: () => { },
 			},
@@ -122,11 +57,6 @@ export class Toolbar extends BaseModule {
 
 					// Adds a class of img-<<rotationvalue>>
 					RotateImageClass.add(this.img, this.rotationvalue);
-
-					// This fires off a change for the quill view
-					var width = this.img.width;
-					this.img.width = width - 1;
-					this.img.width = width + 1;
                 },
                 isApplied: () => { },
 			},
@@ -136,25 +66,15 @@ export class Toolbar extends BaseModule {
 
     _addToolbarButtons = () => {
 		const buttons = [];
-		this.alignments.forEach((alignment, idx) => {
+		this.rotations.forEach((rot, idx) => {
 			const button = document.createElement('span');
-			button.setAttribute('title', alignment.name);
+			button.setAttribute('title', rot.name);
 			buttons.push(button);
-			button.innerHTML = alignment.icon;
+			button.innerHTML = rot.icon;
 			button.addEventListener('click', () => {
-					// deselect all buttons
-				buttons.forEach(button => button.style.filter = '');
-				if (alignment.isApplied()) {
-						// If applied, unapply
-					FloatStyle.remove(this.img);
-					MarginStyle.remove(this.img);
-					DisplayStyle.remove(this.img);
-				}				else {
-						// otherwise, select button and apply
-					this._selectButton(button);
-					alignment.apply();
-				}
-					// image may change position; redraw drag handles
+				//this._selectButton(button);
+				rot.apply();
+				// image may change position; redraw drag handles
 				this.requestUpdate();
 			});
 			Object.assign(button.style, this.options.toolbarButtonStyles);
@@ -162,8 +82,8 @@ export class Toolbar extends BaseModule {
 				button.style.borderLeftWidth = '0';
 			}
 			Object.assign(button.children[0].style, this.options.toolbarButtonSvgStyles);
-			if (alignment.isApplied()) {
-					// select button if previously applied
+			if (rot.isApplied()) {
+				// select button if previously applied
 				this._selectButton(button);
 			}
 			this.toolbar.appendChild(button);
@@ -200,9 +120,9 @@ export class Toolbar extends BaseModule {
 			return 'minus90rotate';
 		} else if (this.rotation == -90 && direction == 'right') {
 			this.rotation = 0;
-			return 'zerorotate';
+			return '';
 		} else {
-			return 'zerorotate';
+			return '';
 		}
 	}
 

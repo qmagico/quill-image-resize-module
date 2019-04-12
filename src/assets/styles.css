@@ -1,30 +1,16 @@
-.ql-editor .img-zerorotate {
-	transform: rotate(0deg);
+
+.ql-editor img {
+    @include m-property-prefix(transform-origin, top left);
 }
 
-.ql-editor .img-minus90rotate {
-	transform: rotate(-90deg);
+.ql-editor .rot-minus90rotate {
+    @include m-property-prefix(transform, rotate(-90deg) translateX(-100%));
 }
 
-.ql-editor .img-90rotate {
-	transform: rotate(90deg);
+.ql-editor .rot-90rotate {
+    @include m-property-prefix(transform, rotate(90deg) translateY(-100%));
 }
 
-.ql-editor .img-180rotate {
-	transform: rotate(180deg);
-}
-
-.ql-editor .img-alignleft {
-	float: left;
-	margin: 0 1em 1em 0;
-}
-
-.ql-editor .img-aligncenter {
-	display: block;
-	margin: auto;
-}
-
-.ql-editor .img-alignright {
-	float: right;
-	margin: 0 0 1em 1em;
+.ql-editor .rot-180rotate {
+    @include m-property-prefix(transform, rotate(180deg) translate(-100%, -100%));
 }

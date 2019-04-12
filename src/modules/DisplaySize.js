@@ -29,15 +29,6 @@ export class DisplaySize extends BaseModule {
                 left: 'auto',
             });
         }
-        else if (this.img.style.float == 'right') {
-			// position off bottom left
-            const dispRect = this.display.getBoundingClientRect();
-            Object.assign(this.display.style, {
-                right: 'auto',
-                bottom: `-${dispRect.height + 4}px`,
-                left: `-${dispRect.width + 4}px`,
-            });
-        }
         else {
             // position off bottom right
             const dispRect = this.display.getBoundingClientRect();
