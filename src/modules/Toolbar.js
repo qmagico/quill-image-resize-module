@@ -14,7 +14,7 @@ const RotateImageClass = new classAttributor('class', 'rot');
 export class Toolbar extends BaseModule {
 	rotation = 0;
 
-    onCreate = () => {
+    onCreate = (that) => {
     	if (this.img.classList[0] == 'rot-90rotate') this.rotation = 90;
 		else if (this.img.classList[0] == 'rot-180rotate') this.rotation = 180;
 		else if (this.img.classList[0] == 'rot-minus90rotate') this.rotation = -90;
@@ -22,6 +22,7 @@ export class Toolbar extends BaseModule {
         this.toolbar = document.createElement('div');
         Object.assign(this.toolbar.style, this.options.toolbarStyles);
         this.overlay.appendChild(this.toolbar);
+        this.quill = that.quill;
 
         // Setup Buttons
         this._definerotations();
@@ -76,6 +77,14 @@ export class Toolbar extends BaseModule {
 				rot.apply();
 				// image may change position; redraw drag handles
 				this.requestUpdate();
+
+				// Tell quill that something has changed
+		        const editor_length = this.quill.getLength();
+		        this.quill.updateContents(new Delta().retain(editor_length - 1).insert(' '), 'user');
+		        const that = this;
+		        setTimeout(function(){
+		            that.quill.updateContents(new Delta().retain(editor_length - 1).delete(1), 'user');
+		        });
 			});
 			Object.assign(button.style, this.options.toolbarButtonStyles);
 			if (idx > 0) {

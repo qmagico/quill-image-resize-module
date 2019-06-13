@@ -48,6 +48,7 @@ export default class ImageResize {
     }
 
     initializeModules = () => {
+        let that = this;
         this.removeModules();
 
         this.modules = this.moduleClasses.map(
@@ -56,7 +57,7 @@ export default class ImageResize {
 
         this.modules.forEach(
             (module) => {
-                module.onCreate();
+                module.onCreate(that);
             },
         );
 
@@ -122,9 +123,9 @@ export default class ImageResize {
         this.quill.setSelection(indexSelectedImage, 0, 'user');
 
         // listen for the image being deleted or moved
-        document.addEventListener('keyup', this.checkImage, true);
+        this.quill.root.addEventListener('keyup', this.checkImage, true);
         this.quill.root.addEventListener('input', this.checkImage, true);
-        document.addEventListener('keydown', this.selectImage, true);
+        this.quill.root.addEventListener('keydown', this.selectImage, true);
         this.quill.on('text-change', this.repositionElements, true);
 
         // Create and add the overlay
@@ -149,14 +150,15 @@ export default class ImageResize {
             return;
         }
 
+        this.img = undefined;
         // Remove the overlay
         this.quill.root.parentNode.removeChild(this.overlay);
         this.overlay = undefined;
 
         // stop listening for image deletion or movement
-        document.removeEventListener('keyup', this.checkImage);
+        this.quill.root.removeEventListener('keyup', this.checkImage);
         this.quill.root.removeEventListener('input', this.checkImage);
-        document.removeEventListener('keydown', this.selectImage);
+        this.quill.root.removeEventListener('keydown', this.selectImage);
         this.quill.off('text-change', this.repositionElements);
 
         // reset user-select
