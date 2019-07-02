@@ -44,6 +44,7 @@ export class Toolbar extends BaseModule {
 				icon: IconUndo,
                 apply: () => {
 					this.rotationvalue = this._setRotation('left');
+					this._adjust_line_height(this.img);
 
 					// Adds a class of rot-<<rotationvalue>>
 					RotateImageClass.add(this.img, this.rotationvalue);
@@ -55,6 +56,7 @@ export class Toolbar extends BaseModule {
                 icon: IconRedo,
                 apply: () => {
 					this.rotationvalue = this._setRotation('right');
+					this._adjust_line_height(this.img);
 
 					// Adds a class of img-<<rotationvalue>>
 					RotateImageClass.add(this.img, this.rotationvalue);
@@ -135,6 +137,29 @@ export class Toolbar extends BaseModule {
 		}
 	}
 
+	_adjust_line_height(img) {
+		if (this.rotation == -90 || this.rotation == 90) {
+			let current_line_height = parseInt(img.parentElement.style.lineHeight);
+			if (isNaN(current_line_height )) {
+				current_line_height = 24;
+			}
+			const new_height = img.width;
+			if (current_line_height < new_height && new_height > 24) {
+				img.parentElement.style.lineHeight = new_height + 'px';
+			}
+		}
+		else {
+			const expected_line_height = img.width;
+			let current_line_height = parseInt(img.parentElement.style.lineHeight);
+			if (isNaN(current_line_height )) {
+				current_line_height = 24;
+			}
+			if (current_line_height == expected_line_height) {
+				img.parentElement.style.lineHeight = 'unset';
+			}
+		}
+	}
+
 	setUserSelect(value) {
 		[
 		  'userSelect',
@@ -146,5 +171,5 @@ export class Toolbar extends BaseModule {
 		  this.quill.root.style[prop] = value;
 		  document.documentElement.style[prop] = value;
 		});
-	  }
+	}
 }

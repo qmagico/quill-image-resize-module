@@ -29,6 +29,7 @@ export default {
         boxSizing: 'border-box',
         opacity: '0.80',
         cursor: 'default',
+        'user-select': 'none'
     },
     toolbarStyles: {
         position: 'absolute',

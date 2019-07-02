@@ -107,8 +107,22 @@ export class Resize extends BaseModule {
             // right-side resize handler; dragging right enlarges image
             this.img.width = Math.round(this.preDragWidth + deltaX);
         }
+        this._adjust_line_height(this.img);
         this.requestUpdate();
     };
+
+    _adjust_line_height(img) {
+        if (img.classList[0] == 'rot-90rotate' || img.classList[0] == 'rot-minus90rotate') {
+            let current_line_height = parseInt(img.parentElement.style.lineHeight);
+            if (isNaN(current_line_height )) {
+                current_line_height = 24;
+            }
+            const new_height = img.width;
+            if (new_height > 24) {
+                img.parentElement.style.lineHeight = new_height + 'px';
+            }
+        }
+    }
 
     setCursor = (value) => {
         [

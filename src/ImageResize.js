@@ -120,7 +120,7 @@ export default class ImageResize {
 
         const image_blot = Parchment.Registry.find(this.img);
         const indexSelectedImage = this.quill.getIndex(image_blot);
-        this.quill.setSelection(indexSelectedImage, 0, 'user');
+        this.quill.setSelection(indexSelectedImage, 0, 'silent');
 
         // listen for the image being deleted or moved
         this.quill.root.addEventListener('keyup', this.checkImage, true);
@@ -141,7 +141,7 @@ export default class ImageResize {
         if (this.img) {
             const image_blot = Parchment.Registry.find(this.img);
             const indexSelectedImage = this.quill.getIndex(image_blot);
-            this.quill.setSelection(indexSelectedImage, 1, 'user');
+            this.quill.setSelection(indexSelectedImage, 1, 'silent');
         }
     }
 
@@ -213,7 +213,7 @@ export default class ImageResize {
                 // Unselect image but keep cursor close
                 const image_blot = Parchment.Registry.find(this.img);
                 const indexSelectedImage = this.quill.getIndex(image_blot);
-                this.quill.setSelection(indexSelectedImage, 0, 'user');
+                this.quill.setSelection(indexSelectedImage, 0, 'silent');
                 return;
             }
             if (evt.keyCode == 46 || evt.keyCode == 8) {  // 46 = delete, 8 = backspace
