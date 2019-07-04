@@ -139,24 +139,12 @@ export class Toolbar extends BaseModule {
 
 	_adjust_line_height(img) {
 		if (this.rotation == -90 || this.rotation == 90) {
-			let current_line_height = parseInt(img.parentElement.style.lineHeight);
-			if (isNaN(current_line_height )) {
-				current_line_height = 24;
-			}
-			const new_height = img.width;
-			if (current_line_height < new_height && new_height > 24) {
-				img.parentElement.style.lineHeight = new_height + 'px';
-			}
+			const correction = img.width - img.height;
+			img.style.marginRight = -correction + 'px';
+			img.style.marginBottom = correction + 'px';
 		}
 		else {
-			const expected_line_height = img.width;
-			let current_line_height = parseInt(img.parentElement.style.lineHeight);
-			if (isNaN(current_line_height )) {
-				current_line_height = 24;
-			}
-			if (current_line_height == expected_line_height) {
-				img.parentElement.style.lineHeight = 'unset';
-			}
+			img.removeAttribute("style");
 		}
 	}
 
