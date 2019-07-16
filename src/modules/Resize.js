@@ -81,8 +81,8 @@ export class Resize extends BaseModule {
         // reset cursor everywhere
         this.setCursor('');
         // stop listening for movement and mouseup
-        document.addEventListener('touchend', this.handleMouseup, false);
-        document.addEventListener('touchmove', this.handleDrag, false);
+        document.removeEventListener('touchend', this.handleMouseup);
+        document.removeEventListener('touchmove', this.handleDrag);
         document.removeEventListener('mousemove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleMouseup);
     };
@@ -106,6 +106,9 @@ export class Resize extends BaseModule {
         } else {
             // right-side resize handler; dragging right enlarges image
             this.img.width = Math.round(this.preDragWidth + deltaX);
+        }
+        if (this.img.hasAttribute('height')) {
+            this.img.removeAttribute('height');
         }
         this._adjust_line_height(this.img);
         this.requestUpdate();
