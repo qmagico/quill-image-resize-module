@@ -140,8 +140,10 @@ export default class ImageResize {
     selectImage = (evt) => {
         if (this.img) {
             const image_blot = Parchment.Registry.find(this.img);
-            const indexSelectedImage = this.quill.getIndex(image_blot);
-            this.quill.setSelection(indexSelectedImage, 1, 'silent');
+            if (image_blot) {
+                const indexSelectedImage = this.quill.getIndex(image_blot);
+                this.quill.setSelection(indexSelectedImage, 1, 'silent');
+            }
         }
     }
 
